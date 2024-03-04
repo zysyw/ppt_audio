@@ -28,6 +28,7 @@ class SingleSentenceTTS:
         print("on_close: args=>{}".format(args))
         try:
             self.__f.close()
+            self.pcm2wav()
             self.pcm2mp3()
         except Exception as e:
             print("close file failed since:", e)
@@ -79,4 +80,4 @@ class SingleSentenceTTS:
         base_name = self.__pcm_file.rpartition('.')[0]
         mp3_file = base_name + ".mp3"
         audio = AudioSegment.from_raw(self.__pcm_file, sample_width=bit_depth//8, frame_rate=sample_rate, channels=channels)
-        audio.export(mp3_file, format="mp3")
+        audio.export(mp3_file, format="mp3", parameters=["-codec:a", "libmp3lame", "-qscale:a", "2"])
